@@ -66,7 +66,7 @@ def descifrar(cadena)
   for char in unique_chars do
     apariciones_count = cadena.count(char)
     porcentaje_aparicion = ((apariciones_count*1.0)/(cadena.length*1.0))*100.0
-    aparicion_letras[char] = porcentaje_aparicion
+    aparicion_letras[char] = porcentaje_aparicion.round(4)
   end
   aparicion_letras = aparicion_letras.sort_by {|k,v| v}.reverse
   puts aparicion_letras.to_s
@@ -95,10 +95,9 @@ def main
     end
     subcadenas_fin.push(subcad)
   end
-  puts subcadenas_fin.first().to_s
-  return nil
+
   subcadenas_texto_plano = []
-  for cadena in subcadenas do
+  for cadena in subcadenas_fin do
       subcadenas_texto_plano << descifrar(cadena)
   end
 
