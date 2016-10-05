@@ -26,10 +26,10 @@ def encontrar_clave(criptograma)
   # Para cada valor de la clave
   rango = 8...1
   (rango.first).downto(rango.last).each do |long_clave|
-    cantidad_subcadenas = (tam_texto / long_clave).ceil
+    longitud_subcadenas = ((tam_texto*1.0) / (long_clave*1.0)).ceil
     array_indices = []
     # Para cada subcadena
-    cantidad_subcadenas.times do |i_subcadena|
+    longitud_subcadenas.times do |i_subcadena|
       subcadena = ''
 
       i = 0
@@ -80,10 +80,22 @@ def main
   file = File.open("texto_cifrado07.txt")
   criptograma = file.read
 
-  salida   = encontrar_clave(criptograma)
-  clave_final = salida[:clave]
-  elementos_columna = (criptograma.length/clave_final).ceil
-  # Continuar por aqui
+  # salida   = encontrar_clave(criptograma)
+  clave_final = 8 #salida[:clave]
+
+  elementos_columna = (criptograma.length*1.0/clave_final*1.0).ceil
+  puts "Elementos columna: " + elementos_columna.to_s
+
+  subcadenas_aux = chunk(criptograma, elementos_columna)
+  subcadenas_fin = []
+  8.times do |c|
+    subcad = ''
+    elementos_columna.times do |f|
+      subcad += criptograma[c + clave_final*f].nil? ? '': criptograma[c + clave_final*f]
+    end
+    subcadenas_fin.push(subcad)
+  end
+  puts subcadenas_fin.first().to_s
   return nil
   subcadenas_texto_plano = []
   for cadena in subcadenas do
