@@ -100,7 +100,7 @@ def main
   for cadena in subcadenas_fin do
       subcadenas_texto_plano << descifrar(cadena)
   end
-
+ 
 end
 
 main
