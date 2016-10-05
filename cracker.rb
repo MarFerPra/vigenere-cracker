@@ -98,6 +98,19 @@ def descifrar(cadena)
     end
   end
   puts "---------"
+
+  cadena_texto_plano = ""
+  (cadena.length).times do |i|
+    letra = cadena[i].delete(' ')
+    if !alfabeto.index(letra).nil?
+      puts "Letra: " + letra + " Distancia E: " + distancia_e.to_s
+      indice = alfabeto.index(letra) + distancia_e
+      # todo
+      puts "Indice: " + indice.to_s
+      cadena_texto_plano += alfabeto[indice % alfabeto.length]
+    end
+  end
+  cadena_texto_plano
 end
 
 def chunk(string, size)
@@ -128,7 +141,7 @@ def main
       subcadenas_texto_plano << descifrar(cadena)
   end
 
-
+ puts subcadenas_texto_plano
 
 end
 
