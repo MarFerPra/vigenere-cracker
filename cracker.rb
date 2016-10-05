@@ -19,41 +19,77 @@ def indice_freeman_subcadena(cadena)
   indice_freeman
 end
 
-file = File.open("texto_cifrado07.txt")
-criptograma = file.read
+def encontrar_clave(criptograma)
+  tam_texto = criptograma.length
+  matriz_indices = []
+  matriz_texto = []
+  # Para cada valor de la clave
+  rango = 8...1
+  (rango.first).downto(rango.last).each do |long_clave|
+    cantidad_subcadenas = (tam_texto / long_clave).ceil
+    array_indices = []
+    # Para cada subcadena
+    cantidad_subcadenas.times do |i_subcadena|
+      subcadena = ''
 
-tam_texto = criptograma.length
-matriz_indices = []
-# Para cada valor de la clave
-rango = 8...1
-(rango.first).downto(rango.last).each do |long_clave|
-  cantidad_subcadenas = (tam_texto / long_clave).ceil
-  array_indices = []
-  # Para cada subcadena
-  cantidad_subcadenas.times do |i_subcadena|
-    subcadena = ''
-
-    i = 0
-    while((i_subcadena + long_clave*i) < tam_texto) do
-      subcadena += criptograma[i_subcadena + long_clave*i]
-      i += 1
+      i = 0
+      while((i_subcadena + long_clave*i) < tam_texto) do
+        subcadena += criptograma[i_subcadena + long_clave*i]
+        i += 1
+      end
+      matriz_texto << subcadena
+      array_indices  << indice_freeman_subcadena(subcadena)
     end
 
-    array_indices  << indice_freeman_subcadena(subcadena)
-  end
+    media = 0.0
+    for i in array_indices do
+      media += array_indices[i]
+    end
 
-  media = 0.0
-  for i in array_indices do
-    media += array_indices[i]
-  end
+    media = media / array_indices.length*1.0
+    if media < 0.08 && media > 0.07
+      puts "Media indices Freeman: " + media.to_s
+      puts "Con long_clave: " + long_clave.to_s
+      puts "Longitud de clave encontrada. \n"
+      return {clave: long_clave, matriz_texto: matriz_texto}
+    end
 
-  media = media / array_indices.length*1.0
-  if media < 0.08 && media > 0.07
-    puts "Media: " + media.to_s
-    puts "Con long_clave: " + long_clave.to_s
+    matriz_indices << array_indices
   end
-
-  matriz_indices << array_indices
 end
 
-puts matriz_indices.to_s
+def descifrar(cadena)
+  cadena_ary = cadena.split("")
+  unique_chars = cadena_ary.uniq
+  aparicion_letras = {}
+
+  for char in unique_chars do
+    apariciones_count = cadena.count(char)
+    porcentaje_aparicion = ((apariciones_count*1.0)/(cadena.length*1.0))*100.0
+    aparicion_letras[char] = porcentaje_aparicion
+  end
+  aparicion_letras = aparicion_letras.sort_by {|k,v| v}.reverse
+  puts aparicion_letras.to_s
+end
+
+def chunk(string, size)
+    string.scan(/.{1,#{size}}/)
+end
+
+def main
+  file = File.open("texto_cifrado07.txt")
+  criptograma = file.read
+
+  salida   = encontrar_clave(criptograma)
+  clave_final = salida[:clave]
+  elementos_columna = (criptograma.length/clave_final).ceil
+  # Continuar por aqui
+  return nil
+  subcadenas_texto_plano = []
+  for cadena in subcadenas do
+      subcadenas_texto_plano << descifrar(cadena)
+  end
+
+end
+
+main
